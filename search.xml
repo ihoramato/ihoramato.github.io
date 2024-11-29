@@ -88,17 +88,6 @@
     
     
     <entry>
-      <title>留言板</title>
-      <link href="/comments/index.html"/>
-      <url>/comments/index.html</url>
-      
-        <content type="html"><![CDATA[]]></content>
-      
-    </entry>
-    
-    
-    
-    <entry>
       <title>关于作者</title>
       <link href="/about/index.html"/>
       <url>/about/index.html</url>
@@ -135,6 +124,17 @@
       <title>友情链接</title>
       <link href="/link/index.html"/>
       <url>/link/index.html</url>
+      
+        <content type="html"><![CDATA[]]></content>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>留言板</title>
+      <link href="/comments/index.html"/>
+      <url>/comments/index.html</url>
       
         <content type="html"><![CDATA[]]></content>
       
