@@ -8,7 +8,7 @@
       <link href="/post/e8a28afb.html"/>
       <url>/post/e8a28afb.html</url>
       
-        <content type="html"><![CDATA[<p>您或许通过某些途径听说了本站的反代服务。现在，请允许我为您介绍本站的pixiv反代功能。  </p><h2 id="为什么我们需要pixiv反代？"><a href="#为什么我们需要pixiv反代？" class="headerlink" title="为什么我们需要pixiv反代？"></a>为什么我们需要pixiv反代？</h2><p><del>因为要看涩图啊（即答）</del><br>Pixiv 在大陆被墙，并且图片服务器域名 <strong>i.pximg.net</strong> 有盗链保护，只要 Referer 不是来自 Pixiv 都会返回 403。于是我在部署QQ机器人时决定自行搭建反代站。<br>并且，由于<a href="https://api.lolicon.app/">lolicon</a>等基于pixiv的图源API返回的是<a href="i.pximg.net">pximg</a>的链接而不是原图，所以，想要从这些图源获取图片，您仍然需要反代服务。<br><del>（<a href="https://api.lolicon.app/">lolicon</a>的图源质量真好啊，不愧是站长人工严选的）</del>  </p><hr><h2 id="说了这么多，我要如何使用呢？"><a href="#说了这么多，我要如何使用呢？" class="headerlink" title="说了这么多，我要如何使用呢？"></a>说了这么多，我要如何使用呢？</h2><p>第一步：获取pixiv图源链接。你可以<a href="https://api.lolicon.app/setu/v2">立即访问loliconAPI</a>来获得一份链接(比如 <a href="https://i.zoneofhirosiwa.top/img-original/img/2016/08/22/00/25/20/58582283_p0.jpg">https://i.zoneofhirosiwa.top/img-original/img/2016/08/22/00/25/20/58582283_p0.jpg</a>) ，或者自行上pixiv搜图。<br>第二步：用我的域名 <strong>i.zoneofhirosiwa.top</strong> 替代 <strong>i.pximg.net</strong> 即可。完成！  </p><table><thead><tr><th>操作</th><th>图源链接</th><th>返回结果</th></tr></thead><tbody><tr><td>反代前</td><td><a href="https://i.pximg.net/img-original/img/2016/08/22/00/25/20/58582283_p0.jpg">https://i.pximg.net/img-original/img/2016/08/22/00/25/20/58582283_p0.jpg</a></td><td><img src="https://i.pximg.net/img-original/img/2016/08/22/00/25/20/58582283_p0.jpg" alt="反代前图源(应该无法显示)"></td></tr><tr><td>反代后</td><td><a href="https://i.zoneofhirosiwa.top/img-original/img/2016/08/22/00/25/20/58582283_p0.jpg">https://i.zoneofhirosiwa.top/img-original/img/2016/08/22/00/25/20/58582283_p0.jpg</a></td><td><img src="https://i.zoneofhirosiwa.top/img-original/img/2016/08/22/00/25/20/58582283_p0.jpg" alt="反代后图源"></td></tr></tbody></table><p>在其他反代站点上(比如 <a href="https://i.pixiv.re/">https://i.pixiv.re</a>) 您都可以采取类似方法。<br><del>喜欢玩东方的小朋友们，你们好……</del></p><hr><h2 id="实现代码"><a href="#实现代码" class="headerlink" title="实现代码"></a>实现代码</h2><p>本服务托管在 cloudfare 上。由于采用的是免费计划，处理能力有限,请酌情使用。<br><del>别搁那儿爬了，我一个小站长何德何能啊</del><br>Worker代码：</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">export default &#123;</span><br><span class="line">  async fetch(request) &#123;</span><br><span class="line">    const url = new URL(request.url);</span><br><span class="line">    url.hostname = &#x27;i.pximg.net&#x27;;</span><br><span class="line"></span><br><span class="line">    const proxyRequest = new Request(url, request);</span><br><span class="line">    proxyRequest.headers.set(&#x27;Referer&#x27;, &#x27;https://www.pixiv.net/&#x27;);</span><br><span class="line"></span><br><span class="line">    return fetch(proxyRequest);</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure><p>想要用相同方法搭建，您首先需要购买一个域名。然后，将域名托管到cloudfare。之后，创建该worker并绑定你的自定义域。每日 100k 次免费请求完全足够私人使用了。<del>强炉灰飞烟灭，哥们儿</del></p><hr><h2 id="为什么只代理图片？"><a href="#为什么只代理图片？" class="headerlink" title="为什么只代理图片？"></a>为什么只代理图片？</h2><p>我其实已经搭建了通用的反代worker，但是因为还没有用上，所以这里只介绍pixiv图片反代了。</p><hr><h2 id="法律声明"><a href="#法律声明" class="headerlink" title="法律声明"></a>法律声明</h2><p>本反代站点已接入闭源审核服务。请勿将本反代服务用于非法用途。一旦发现本服务被用于非法活动，本人将关停该服务并依法追究法律责任。</p><hr><h2 id="正式开始"><a href="#正式开始" class="headerlink" title="正式开始"></a>正式开始</h2><p><a href="https://api.lolicon.app/setu/v2">立即访问loliconAPI</a>，来尝试一下这份反代服务吧！</p>]]></content>
+        <content type="html"><![CDATA[<p>您或许通过某些途径听说了本站的反代服务。现在，请允许我为您介绍本站的pixiv反代功能。  </p><hr><h2 id="为什么我们需要pixiv反代？"><a href="#为什么我们需要pixiv反代？" class="headerlink" title="为什么我们需要pixiv反代？"></a>为什么我们需要pixiv反代？</h2><p><del>因为要看涩图啊（即答）</del><br>Pixiv 在大陆被墙，并且图片服务器域名 <strong>i.pximg.net</strong> 有盗链保护，只要 Referer 不是来自 Pixiv 都会返回 403。于是我在部署QQ机器人时决定自行搭建反代站。<br>并且，由于<a href="https://api.lolicon.app/">lolicon</a>等基于pixiv的图源API返回的是<a href="i.pximg.net">pximg</a>的链接而不是原图，所以，想要从这些图源获取图片，您仍然需要反代服务。<br><del>（<a href="https://api.lolicon.app/">lolicon</a>的图源质量真好啊，不愧是站长人工严选的）</del>  </p><hr><h2 id="说了这么多，我要如何使用呢？"><a href="#说了这么多，我要如何使用呢？" class="headerlink" title="说了这么多，我要如何使用呢？"></a>说了这么多，我要如何使用呢？</h2><p>第一步：获取pixiv图源链接。你可以<a href="https://api.lolicon.app/setu/v2">立即访问loliconAPI</a>来获得一份链接(比如 <a href="https://i.zoneofhirosiwa.top/img-original/img/2016/08/22/00/25/20/58582283_p0.jpg">https://i.zoneofhirosiwa.top/img-original/img/2016/08/22/00/25/20/58582283_p0.jpg</a>) ，或者自行上pixiv搜图。<br>第二步：用我的域名 <strong>i.zoneofhirosiwa.top</strong> 替代 <strong>i.pximg.net</strong> 即可。完成！  </p><table><thead><tr><th>操作</th><th>图源链接</th><th>返回结果</th></tr></thead><tbody><tr><td>反代前</td><td><a href="https://i.pximg.net/img-original/img/2016/08/22/00/25/20/58582283_p0.jpg">https://i.pximg.net/img-original/img/2016/08/22/00/25/20/58582283_p0.jpg</a></td><td><img src="https://i.pximg.net/img-original/img/2016/08/22/00/25/20/58582283_p0.jpg" alt="反代前图源(应该无法显示)"></td></tr><tr><td>反代后</td><td><a href="https://i.zoneofhirosiwa.top/img-original/img/2016/08/22/00/25/20/58582283_p0.jpg">https://i.zoneofhirosiwa.top/img-original/img/2016/08/22/00/25/20/58582283_p0.jpg</a></td><td><img src="https://i.zoneofhirosiwa.top/img-original/img/2016/08/22/00/25/20/58582283_p0.jpg" alt="反代后图源"></td></tr></tbody></table><p>在其他反代站点上(比如 <a href="https://i.pixiv.re/">https://i.pixiv.re</a>) 您都可以采取类似方法。<br><del>喜欢玩东方的小朋友们，你们好……</del></p><hr><h2 id="实现代码"><a href="#实现代码" class="headerlink" title="实现代码"></a>实现代码</h2><p>本服务托管在 cloudfare 上。由于采用的是免费计划，处理能力有限,请酌情使用。<br><del>别搁那儿爬了，我一个小站长何德何能啊</del><br>Worker代码：</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">export default &#123;</span><br><span class="line">  async fetch(request) &#123;</span><br><span class="line">    const url = new URL(request.url);</span><br><span class="line">    url.hostname = &#x27;i.pximg.net&#x27;;</span><br><span class="line"></span><br><span class="line">    const proxyRequest = new Request(url, request);</span><br><span class="line">    proxyRequest.headers.set(&#x27;Referer&#x27;, &#x27;https://www.pixiv.net/&#x27;);</span><br><span class="line"></span><br><span class="line">    return fetch(proxyRequest);</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure><p>想要用相同方法搭建，您首先需要购买一个域名。然后，将域名托管到cloudfare。之后，创建该worker并绑定你的自定义域。每日 100k 次免费请求完全足够私人使用了。<del>强炉灰飞烟灭，哥们儿</del></p><hr><h2 id="为什么只代理图片？"><a href="#为什么只代理图片？" class="headerlink" title="为什么只代理图片？"></a>为什么只代理图片？</h2><p>我其实已经搭建了通用的反代worker，但是因为还没有用上，所以这里只介绍pixiv图片反代了。</p><hr><h2 id="法律声明"><a href="#法律声明" class="headerlink" title="法律声明"></a>法律声明</h2><p>本反代站点已接入闭源审核服务。请勿将本反代服务用于非法用途。一旦发现本服务被用于非法活动，本人将关停该服务并依法追究法律责任。</p><hr><h2 id="正式开始"><a href="#正式开始" class="headerlink" title="正式开始"></a>正式开始</h2><p><a href="https://api.lolicon.app/setu/v2">立即访问loliconAPI</a>，来尝试一下这份反代服务吧！</p>]]></content>
       
       
       <categories>
@@ -36,6 +36,12 @@
           
       </categories>
       
+      
+        <tags>
+            
+            <tag> ‘你好’ </tag>
+            
+        </tags>
       
     </entry>
     
@@ -71,9 +77,9 @@
     
     
     <entry>
-      <title>分类</title>
-      <link href="/categories/index.html"/>
-      <url>/categories/index.html</url>
+      <title>关于作者</title>
+      <link href="/about/index.html"/>
+      <url>/about/index.html</url>
       
         <content type="html"><![CDATA[]]></content>
       
@@ -82,9 +88,9 @@
     
     
     <entry>
-      <title>友情链接</title>
-      <link href="/link/index.html"/>
-      <url>/link/index.html</url>
+      <title>分类</title>
+      <link href="/categories/index.html"/>
+      <url>/categories/index.html</url>
       
         <content type="html"><![CDATA[]]></content>
       
@@ -104,9 +110,9 @@
     
     
     <entry>
-      <title>关于作者</title>
-      <link href="/about/index.html"/>
-      <url>/about/index.html</url>
+      <title>友情链接</title>
+      <link href="/link/index.html"/>
+      <url>/link/index.html</url>
       
         <content type="html"><![CDATA[]]></content>
       
