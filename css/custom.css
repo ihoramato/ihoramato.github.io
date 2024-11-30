@@ -140,7 +140,7 @@
   /* 为载入的字体取名字(随意) */
   font-family: 'lxgw';	
   /* 字体文件地址(相对或者绝对路径都可以) */
-  src: url(./fonts/LXGWWenKai-Regular.woff2) format('truetype')
+  src: url(./fonts/LXGWWenKaiLite-Regular.woff2) format('truetype')
 }
 
 
