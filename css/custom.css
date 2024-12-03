@@ -141,6 +141,7 @@
   font-family: 'lxgw';	
   /* 字体文件地址(相对或者绝对路径都可以) */
   src: url(./fonts/LXGWWenKaiLite-Regular.woff2) format('truetype')
+  font-display: swap;
 }
 
 
