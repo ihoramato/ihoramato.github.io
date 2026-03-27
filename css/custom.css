@@ -1,5 +1,6 @@
-@font-face {
-  font-family: 'LXGW';
-  src: url('/fonts/LXGW.woff2') format('woff2');
-  font-display: swap;
+@import url("https://fontsapi.zeoseven.com/292/main/result.css");
+
+body {
+    font-family: "LXGW WenKai";
+    font-weight: normal;
 }
